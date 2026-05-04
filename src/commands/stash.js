@@ -1,3 +1,4 @@
+const { ensureRepo } = require('../core/repository')
 const {
     stashPush,
     stashList,
@@ -9,6 +10,7 @@ const {
 } = require('../core/stash')
 
 function stash(args) {
+    ensureRepo()
     const cmd = args[0]
 
     if (!cmd) {
