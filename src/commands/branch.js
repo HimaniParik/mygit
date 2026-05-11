@@ -5,11 +5,12 @@ const zlib = require('zlib')
 const colors = require('../utils/colors')
 const getCurrentBranch = require('../helpers/getCurrentBranch')
 const getCurrentCommit = require('../helpers/getCurrentCommit')
+const { getRepoPath, ensureRepo } = require('../core/repository')
 
 function getAllBranches() {
     // List all branches in refs/heads
 
-    const mygitDir = path.join(process.cwd(), '.mygit')
+    const mygitDir = getRepoPath()
     const headsDir = path.join(mygitDir, 'refs', 'heads')
 
     if (!fs.existsSync(headsDir)) {
@@ -39,10 +40,10 @@ function getCommitMessage(commitHash) {
     // Read a commit's message
 
     try {
-        const gitDir = path.join(process.cwd(), '.mygit')
+        const mygitDir = getRepoPath()
         const dir = commitHash.slice(0, 2)
         const file = commitHash.slice(2)
-        const objPath = path.join(gitDir, 'objects', dir, file)
+        const objPath = path.join(mygitDir, 'objects', dir, file)
 
         if (!fs.existsSync(objPath)) {
             return ""
@@ -103,7 +104,7 @@ function listBranches(verbose=false) {
 }
 
 function createBranch(branchName) {
-    const mygitDir = path.join(process.cwd(), ".mygit")
+    const mygitDir = getRepoPath()
     const branchPath = path.join(mygitDir, 'refs', 'heads', branchName)
 
     // Check if branch already exist
@@ -142,7 +143,7 @@ function createBranch(branchName) {
 }
 
 function deleteBranch(branchName, force=false) {
-    const mygitDir = path.join(process.cwd(), '.mygit')
+    const mygitDir = getRepoPath()
     const branchPath = path.join(mygitDir, 'refs', 'heads', branchName)
 
     // Check if branch exist
@@ -167,8 +168,6 @@ function deleteBranch(branchName, force=false) {
     }
 }
 
-// MAIN FUNCTION TO HANDLE THE BRANCH COMMAND
-
 /**
  * Lists branches, creates a branch at the current commit, or deletes an existing branch.
  * Supports verbose listing and delete flags while protecting the checked-out branch from deletion.
@@ -177,11 +176,7 @@ function deleteBranch(branchName, force=false) {
  */
 function branch(args=[]) {
     // 1. Check if we're in a mygit repository
-    const mygitDir = path.join(process.cwd(), '.mygit')
-    if (!fs.existsSync(mygitDir)) {
-        console.error('fatal: not a mygit repository')
-        process.exit(1)
-    }
+    ensureRepo()
 
     // 2. Parse arguments
     if (args.length === 0) {

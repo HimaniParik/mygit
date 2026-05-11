@@ -2,7 +2,7 @@ const fs = require('fs')
 const path = require('path')
 const zlib = require('zlib')
 
-function parseTree(buffer) {
+function parseAndLogTree(buffer) {
     let i = 0
     while (i < buffer.length) {
         const spaceIndex = buffer.indexOf(32, i)
@@ -20,7 +20,8 @@ function parseTree(buffer) {
         i = nullIndex + 21
     }
 }
-function parseObject(buffer) {
+
+function parseAndLogObject(buffer) {
     const nullIndex = buffer.indexOf(0)
 
     const header = buffer.slice(0, nullIndex).toString()
@@ -35,11 +36,12 @@ function parseObject(buffer) {
     if (type === 'blob') {
         console.log(content.toString())
     } else if (type === 'tree') {
-        parseTree(content)
+        parseAndLogTree(content)
     } else {
         console.log(content.toString())
     }
 }
+
 /**
  * Decompresses a stored object and prints its type, size, and parsed content.
  * Tree objects are displayed entry by entry with mode, name, and hash.
@@ -66,7 +68,7 @@ function inspectObject(hash) {
     const compressed = fs.readFileSync(objPath)
     const decompressed = zlib.inflateSync(compressed)
 
-    parseObject(decompressed)
+    parseAndLogObject(decompressed)
 }
 
 module.exports = inspectObject

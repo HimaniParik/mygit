@@ -3,19 +3,8 @@ const path = require('path')
 
 const commitTree = require('./commit-tree')
 const hashObjectContent = require('../helpers/hashObjectContent')
-
-
-function readIndex() {
-    const indexPath = path.join(process.cwd(), '.mygit', 'index')
-
-    if (!fs.existsSync(indexPath)) {
-        return {version: 1, entries: {}}
-    }
-
-    const content = fs.readFileSync(indexPath, 'utf-8')
-
-    return JSON.parse(content)
-}
+const { getRepoPath, ensureRepo } = require('../core/repository')
+const { readIndex } = require('../core/index')
 
 function writeTreeFromIndex(entries, prefix='') {
     // Create a tree from index entries 
@@ -112,13 +101,9 @@ function commit(message) {
     }
 
     // Check if you're in a mygit repository
-    const mygitDir = path.join(process.cwd(), '.mygit')
+    const mygitDir = getRepoPath()
 
-    if (!fs.existsSync(mygitDir)) {
-        console.error('fatal: not a mygit repository');
-        console.error('Run "mygit init" first');
-        process.exit(1);
-    }
+    ensureRepo()
 
     //  Read index 
     const index = readIndex()
