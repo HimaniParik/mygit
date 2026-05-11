@@ -62,7 +62,7 @@ test('running init twice does not break repo' , () => {
     const headContent = fs.readFileSync(headPath, 'utf-8').trim()
 
 
-    assert.strictEqual(init2, "A '.mygit' directory already exist inside this folder.")
+    assert.strictEqual(init2, "A '.mygit' directory already exists inside this folder.")
     assert.ok(fs.existsSync(headPath))
     assert.strictEqual(headContent, 'ref: refs/heads/main')
 })

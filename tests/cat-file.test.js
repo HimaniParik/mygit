@@ -17,7 +17,7 @@ test('cat-file -s shows the correct size', () => {
   const filePath = path.join(baseDir, 'file.txt')
   fs.writeFileSync(filePath, 'hello')
 
-  const hash = run(`mygit hash-object ${filePath}`)
+  const hash = run(`mygit hash-object ${filePath} -w`)
   const size = run(`mygit cat-file -s ${hash}`)
 
   assert.strictEqual(Number(size), 5)
@@ -28,7 +28,7 @@ test('cat-file -t shows object type', () => {
   const filePath = path.join(baseDir, 'file.txt')
   fs.writeFileSync(filePath, 'hello')
 
-  const hash = run(`mygit hash-object ${filePath}`)
+  const hash = run(`mygit hash-object ${filePath} -w`)
   const type = run(`mygit cat-file -t ${hash}`)
 
   assert.strictEqual(type, 'blob')
@@ -39,7 +39,7 @@ test('cat-file -p prints blob content', () => {
   const filePath = path.join(baseDir, 'file.txt')
   fs.writeFileSync(filePath, 'hello')
 
-  const hash = run(`mygit hash-object ${filePath}`)
+  const hash = run(`mygit hash-object ${filePath} -w`)
   const content = run(`mygit cat-file -p ${hash}`)
 
   assert.strictEqual(content, 'hello')
@@ -50,7 +50,7 @@ test('cat-file supports short hash', () => {
   const filePath = path.join(baseDir, 'file.txt')
   fs.writeFileSync(filePath, 'hello')
 
-  const hash = hashObject(filePath)
+  const hash = hashObject('blob', filePath, true)
   const short = hash.slice(0, 6)
 
   const content = run(`mygit cat-file -p ${short}`)
