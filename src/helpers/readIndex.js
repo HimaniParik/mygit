@@ -1,3 +1,6 @@
+// I moved this function to core/index.js
+// this will be deprecated.
+// Use core/index.js's readIndex insted of this
 const fs = require('fs')
 const path = require('path')
 

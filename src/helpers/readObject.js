@@ -2,9 +2,10 @@ const fs = require('fs')
 const path = require('path')
 const zlib = require('zlib')
 /**
- * Reads a git object (hash) from disk and returns its header and content.
+ * Reads a git object (hash) from disk and returns its header, content type and size.
  * @param {string} hash - The hash of the object to read.
- * @returns {Object} - An object with four properties: 'header', 'content', 'type', 'size'. 'header' is a string representing the header of the object, 
+ * @returns {Object} - An object with four properties: 'header', 'content', 'type', 'size'. 'header' is a string representing the header of the object,
+ * the 'header' is a string in the format '<type> <size>\0'. 
  * the 'content' is a Buffer containing the content of the object, 
  * the 'type' is the type of object of the entry and 
  * the 'size' is the size of the object in bytes

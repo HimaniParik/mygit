@@ -1,6 +1,6 @@
 
 /**
- * Parse a tree object into human-readable entries
+ * Parse a tree object into human-readable javascript object
  * @param {Buffer} content - The content of the tree object (a Buffer)
  * @returns {Array<Object>} - An array of objects containing the mode, name, and hash of each entry
  * @throws {Error} - If the tree content is malformed or incomplete

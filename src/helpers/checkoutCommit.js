@@ -2,7 +2,7 @@ const fs = require('fs')
 const path = require('path')
 
 const readObject  = require('../helpers/readObject')
-const parseTree = require('../helpers/parseTree')
+const readTree = require('../helpers/readTree')
 
 function getCurrentFiles(dir = process.cwd(), prefix = '') {
     const files = new Set();
@@ -75,23 +75,6 @@ function updateWorkingDirectory(targetFiles) {
     }
 }
 
-function readTree(treeHash, prefix = '') {
-    const { content } = readObject(treeHash)
-    const entries = parseTree(content)
-    const files = {}
-
-    for (const entry of entries) {
-        const fullPath = prefix ? `${prefix}/${entry.name}` : entry.name
-
-        if (entry.mode === '40000') {
-            Object.assign(files, readTree(entry.hash, fullPath))
-        } else {
-            files[fullPath] = entry
-        }
-    }
-
-    return files
-}
 
 function checkoutCommit(commitHash) {
     const { content } = readObject(commitHash)
